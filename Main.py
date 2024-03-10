@@ -3,10 +3,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import DataManipulation
+import GetFromAPI
 
 st.title(":blue[**our bil481 project**]")
 
-option = st.selectbox('please choose the country for flight information:', ('america', 'turkey', 'france'))
+option = st.selectbox('please choose the country for flight information:', ('World', 'New York', 'Washington',
+                                                                            'Los Angeles', 'Istanbul', 'Roma',
+                                                                            'Berlin'))
 
 st.write('you selected:', option)
 
@@ -17,13 +20,23 @@ def assign_data():
     return longitudes, latitudes
 
 
-@st.cache_data(ttl=10)
 def assign_aircraft_list():
     aircraft_list = DataManipulation.get_aircrafts()
     return aircraft_list
 
 
+GetFromAPI.load_flight_data()
 longitude, latitude = assign_data()
+
+if option == 'World':
+    # Loads data for whole world
+    GetFromAPI.load_flight_data()
+    longitude, latitude = assign_data()
+else:
+    # Loads data using city name
+    GetFromAPI.load_precise_data(option)
+    longitude, latitude = assign_data()
+
 
 # Create scatter plot
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -40,11 +53,13 @@ st.pyplot(fig)
 map_container = st.empty()
 
 while True:
+    print(option)
+
     aircraft_list = assign_aircraft_list()
     df = pd.DataFrame(aircraft_list)
 
     # Repaint the map
     with map_container:
         st.map(df)
-
-    time.sleep(5)  # 10 second wait
+    time.sleep(5)
+    

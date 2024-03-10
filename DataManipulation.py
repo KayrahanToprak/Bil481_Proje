@@ -4,8 +4,14 @@
 import json
 import GetFromAPI
 
-
 def get_latitudes():
+    # Open the json file
+    with open('flight_data.json', 'r') as loaded_data:
+        # Load the data to a variable
+        data = json.load(loaded_data)
+
+    # Get the flights
+    aircrafts = data.get("ac", [])
     # Array to hold latitudes
     latitudes = []
     for aircraft in aircrafts:
@@ -15,6 +21,14 @@ def get_latitudes():
 
 
 def get_longitudes():
+    # Open the json file
+    with open('flight_data.json', 'r') as loaded_data:
+        # Load the data to a variable
+        data = json.load(loaded_data)
+
+    # Get the flights
+    aircrafts = data.get("ac", [])
+
     # Array to hold longitudes
     longitudes = []
     for aircraft in aircrafts:
@@ -24,6 +38,14 @@ def get_longitudes():
 
 
 def get_aircrafts():
+    # Open the json file
+    with open('flight_data.json', 'r') as loaded_data:
+        # Load the data to a variable
+        data = json.load(loaded_data)
+
+    # Get the flights
+    aircrafts = data.get("ac", [])
+
     aircraft_list = []
     for aircraft in aircrafts:
         lat = aircraft.get("lat", 0)
@@ -38,16 +60,3 @@ def get_aircrafts():
         # Append each plane's information to list
         aircraft_list.append(aircraft_info)
     return aircraft_list
-
-
-# Read data from API and create json file
-if not GetFromAPI.loadFlightData():
-    exit(1)
-
-# Open the json file
-with open('flight_data.json', 'r') as loaded_data:
-    # Load the data to a variable
-    data = json.load(loaded_data)
-
-# Get the flights
-aircrafts = data.get("ac", [])
